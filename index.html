@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+  <head>
+    <title></title>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <link rel="icon" href="./assets/img/vueLogo.png" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" />
+    <link href="./assets/style/style.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <script>document.title = 'Shoes shop'</script>
+    <div id="app">
+      <nav>
+        <div class="nav-container">
+          <div id="logo" class="logo">
+            <router-link to="/">
+              <img src="./assets/img/sneaker.jpg" alt="logo" />
+            </router-link>
+          </div>
+
+          <ul id="icons">
+            <li>
+              <router-link to="/user-setting">
+                <i class="fas fa-user"></i>
+              </router-link>
+            </li>
+            <li>
+              <router-link to="/wish-list">
+                <i class="fas fa-heart"></i>
+                <span id="nav-not"></span>
+              </router-link>
+            </li>
+            <li>
+              <router-link to="/shopping-card">
+                <i class=" fas fa-shopping-cart"></i>
+              </router-link>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <router-view> </router-view>
+    </div>
+    <script type="text/x-template" id="home">
+      <div class="home-container">
+        <div class="container"> </div>
+        <input type="seach" v-model="searchKey" placeholder="rechercher selon la couleur..." id="search" autocomplet="off">
+        <span class="result" v-if="searchKey && filteredList.length > 1 ">
+          Resulats trouvés {{ filteredList.length }}
+        </span>
+        <span class="result" v-if="searchKey && filteredList.length == 1 ">
+          Resulat trouvé {{ filteredList.length }}
+        </span>
+        <p v-show="filteredList == false" class="notFound">Désolé(e),  Aucun resultat trouvé</p>
+        <div class="card-cart-container">
+          <div class="card-container">
+            <div v-for="product in  filteredList" class="card">
+              <div class="img-container">
+                <img :src="product.img " :alt="product.alt">
+              </div>
+              <div class="card-text">
+                <h3>{{ product.description }}</h3>
+                <span>{{ product.price }} £</span>
+              </div>
+              <div class="card-icons">
+                <div class="like-container">
+                  <input type="checkbox" name="checkbox" v-bind:id="product.id" :value=product.id @click="setLikedCookie()">
+                  <label v-bind:for="product.id">
+                    <i class="fas fa-heart"></i>
+                  </label>
+                </div>
+                <div class="add-to-cart">
+                  <button v-on:click="addToCart(product)">
+                    <i class="fas fa-shopping-cart"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <template>
+            <transition name="cart-anim">
+                <div v-if="cart.length > 0" class="shopping-cart" id="shopping-cart">
+                    <h2>votre panier</h2>
+                    <transition-group name="item-anim" tag="div" class="item-group">
+                          <div v-for="(product, id) in cart" :key="product.id" class="item">
+                              <div class="img-container">
+                                <img :src="product.img" :alt="product.alt" width="100%">
+                                </div>
+                              <div class="item-description">
+                                <h4>{{ product.description }}</h4>
+                                <h4>{{ product.price }} £</h4>
+                              </div>
+                              <div class="item-quantity">
+                                <p>Quantity : <span style="color: aqua">{{ product.quantity }}</span></p>
+                                  <div class="cart-icons">
+                                <button v-on:click="cartPlusOne(product)">
+                                  <i class="fa fa-plus"></i>
+                                </button>
+                                <button v-on:click="cartMinusOne(product, id)">
+                                  <i class="fa fa-minus"></i>
+                                </button>
+                                <button v-on:click="cartRemoveItem(id)">
+                                  <i class="fa fa-trash"></i>
+                                </button>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="grand-total">
+                            <h2>Total</h2>
+                            <p>Totale de quantité : <span style="color: aqua">{{ totalQuantity }}</span></p>
+                            <p>Totale de prix : <span style="color: aqua">{{ totalPrice }} £</span></p> 
+                        </div>
+                    </transition-group>
+                  </div>
+            </transition>
+          </template>
+       </div>
+      </div>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-router@3"></script>
+    <script src="https://unpkg.com/vue-cookies@1.8.4/vue-cookies.js"></script>
+    <script src="./assets/js/vue.js"></script>
+    <script src="./assets/js/script.js"></script>
+  </body>
+
+</html>
